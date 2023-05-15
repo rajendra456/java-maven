@@ -1,0 +1,28 @@
+pipeline{
+  agent  any
+  tools{
+     maven 'maven'
+  
+  stages{
+       stage('build'){
+	           steps{
+			       sh "mvn clean package"
+				   }
+				   post{
+				      success{
+					        echo "atchiving the artifacts"
+							archiveArtifacts artifacts: '**/taget/*.war'
+	   }
+	   }
+	   }
+	   
+	   stage('deploy to tomcat server'){
+	  
+	      steps{
+		      deploy adapters: [tomcat9(credentialsId: 'd65be2fd-7b42-46f2-aea1-841173408137', path: '', url: 'http://52.90.58.88:8080/')], contextPath: null, war: '**/*.war'
+		      }
+	   }
+  }
+}
+Jenkins Project | Build a JAVA application & Deploy into Tomcat server using Pipeline script
+
